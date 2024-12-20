@@ -1,28 +1,4 @@
-<?php
-include("config.php");
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_menu = $_POST["id_menu"];
-    $date = $_POST["date"];
-    $heure = $_POST["heure"];
-    $nombre_personnes = $_POST["nombre_personnes"];
-    $quantite = $_POST["quantite"];
 
-    // Debug: print data
-    echo "Form Data: " . $id_menu . " | " . $date . " | " . $heure . " | " . $nombre_personnes . " | " . $quantite;
-    
-    // SQL Insert
-    $sql = "INSERT INTO reservation (date, heure, nombre_personnes, id_menu, quantite) 
-            VALUES ('$date', '$heure', '$nombre_personnes', '$id_menu', '$quantite')";
-
-    // Check if the SQL query works
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Reservation successfully added!');</script>";
-    } else {
-        echo "<script>alert('Error: " . $conn->error . "');</script>";
-    }
-}
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -128,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Sign Up Form -->
             <div id="signUpForm" class="space-y-6 hidden mt-8">
                 <h3 class="text-2xl font-bold text-gray-800 mb-4 ">Sign Up</h3>
-                <form action="/signup" method="POST" class="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg space-y-6">
+                <form action="signup.php" method="POST" class="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg space-y-6">
                     <div>
                         <label for="nom" class="block text-left text-gray-700">Full Name</label>
                         <input type="text" id="nom" name="nom" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Full Name" >
@@ -138,16 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="email" id="email" name="email" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Email" >
                     </div>
                     <div>
-                        <label for="mot_de_passe" class="block text-left text-gray-700">Password</label>
-                        <input type="password" id="mot_de_passe" name="mot_de_passe" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Password" >
+                        <label for="password" class="block text-left text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Password" >
                     </div>
-                    <div class="flex space-x-4">
-                        <label for="role" class="w-full text-left text-gray-700">Role</label>
-                        <select name="role" id="role" class="w-full p-3 border border-gray-300 rounded-lg">
-                            <option value="client">Client</option>
-                            <option value="chef">Chef</option>
-                        </select>
-                    </div>
+                    
                     <div>
                         <label for="adresse" class="block text-left text-gray-700">Address</label>
                         <textarea name="adresse" id="adresse" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Address" ></textarea>
@@ -159,67 +129,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <!-- Sign In Form -->
             <div id="signInForm" class="space-y-6 hidden mt-8">
                 <h3 class="text-2xl font-bold text-gray-800 mb-4">Sign In</h3>
-                <form action="/signin" method="POST" class="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg space-y-6">
+                <form action="signin.php" method="POST" class="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg space-y-6">
                     <div>
                         <label for="email_signin" class="block text-left text-gray-700">Email</label>
                         <input type="email" id="email_signin" name="email" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Email" >
                     </div>
                     <div>
-                        <label for="mot_de_passe_signin" class="block text-left text-gray-700">Password</label>
-                        <input type="password" id="mot_de_passe_signin" name="mot_de_passe" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Password" >
+                        <label for="password" class="block text-left text-gray-700">Password</label>
+                        <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Password" >
                     </div>
                     <button type="submit" class="w-full bg-custom text-white p-3 rounded-lg">Sign In</button>
                 </form>
             </div>
         </div>
     </section>
-    <?php
-include('config.php');
-$menuQuery = "SELECT id_menu, nom_menu FROM menu";
-$menuResult = $conn->query($menuQuery);
-if ($menuResult === false) {
-    echo "Error fetching menus: " . $conn->error;
-    exit;
-}
-?>
-<!--reseravaation       zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz                     z -->
-<form action="tabreservation.php" method="POST" class="max-w-lg mx-auto bg-gray-50 p-6 rounded-lg shadow-lg space-y-4">
-<div>
-    <label for="id_menu" class="block text-left text-gray-700 font-medium">Select Menu</label>
-    <select name="id_menu" id="id_menu" class="w-full p-3 border rounded-lg" required>
-        <option value="">-- Choose Menu --</option>
-        <?php
-        while ($menu = $menuResult->fetch_assoc()) {
-            echo '<option value="' . $menu['id_menu'] . '">' . $menu['nom_menu'] . '</option>';
-        }
-        ?>
-    </select>
-</div>
+    
 
-<div>
-    <label for="date" class="block text-left text-gray-700 font-medium">Date</label>
-    <input type="date" id="date" name="date" class="w-full p-3 border rounded-lg" required>
-</div>
 
-<div>
-    <label for="heure" class="block text-left text-gray-700 font-medium">Time</label>
-    <input type="time" id="heure" name="heure" class="w-full p-3 border rounded-lg" required>
-</div>
 
-<div>
-    <label for="nombre_personnes" class="block text-left text-gray-700 font-medium">Number of People</label>
-    <input type="number" id="nombre_personnes" name="nombre_personnes" class="w-full p-3 border rounded-lg" min="1" required>
-</div>
-
-<div>
-    <label for="quantite" class="block text-left text-gray-700 font-medium">Quantity</label>
-    <input type="number" id="quantite" name="quantite" class="w-full p-3 border rounded-lg" min="1" required>
-</div>
-
-<button type="submit" name="submit_reservation" class="w-full bg-custom text-white p-3 rounded-lg font-bold">
-    Book Reservation
-</button>
-</form>
 
      
     <footer class="bg-gray-800 text-gray-400 py-6">

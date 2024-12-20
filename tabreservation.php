@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,6 +29,7 @@
             <table class="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>
+                        <th class="px-6 py-3 border-b">Client name</th>
                         <th class="px-6 py-3 border-b">Reservation ID</th>
                         <th class="px-6 py-3 border-b">Menu</th>
                         <th class="px-6 py-3 border-b">Date</th>
@@ -36,39 +39,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    include('config.php');
+                <?php
+include('config.php');
 
-                    // Fetch reservations from the database
-                    $reservationQuery = "SELECT r.id_reservation, r.date, r.heure, r.nombre_personnes, r.quantite, m.nom_menu
-                                         FROM reservation r
-                                         JOIN menu m ON r.id_menu = m.id_menu";
-                    $result = $conn->query($reservationQuery);
+$reservationQuery = "SELECT r.id_reservation, r.date, r.heure, r.nombre_personnes, r.quantite, 
+                             m.nom_menu, u.nom AS nom_utilisateur 
+                      FROM reservation r
+                      JOIN menu m ON r.id_menu = m.id_menu 
+                      JOIN utilisateur u ON r.id_utilisateur = u.id_utilisateur";
 
-                    if ($result->num_rows > 0) {
-                        while ($reservation = $result->fetch_assoc()) {
-                            echo '<tr>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['id_reservation']) . '</td>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['nom_menu']) . '</td>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['date']) . '</td>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['heure']) . '</td>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['nombre_personnes']) . '</td>';
-                            echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['quantite']) . '</td>';
-                            echo '</tr>';
-                        }
-                    } else {
-                        echo '<tr><td colspan="6" class="px-6 py-4 text-center">No reservations found.</td></tr>';
-                    }
-                    ?>
+$result = $conn->query($reservationQuery);
+
+if ($result->num_rows > 0) {
+    while ($reservation = $result->fetch_assoc()) {
+        echo '<tr>';
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['nom_utilisateur']) . '</td>'; // Correctly display the user's name
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['id_reservation']) . '</td>'; // Display reservation ID
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['nom_menu']) . '</td>';
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['date']) . '</td>';
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['heure']) . '</td>';
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['nombre_personnes']) . '</td>';
+        echo '<td class="px-6 py-4 border-b">' . htmlspecialchars($reservation['quantite']) . '</td>';
+        echo '</tr>';
+    }
+} else {
+    echo '<tr><td colspan="7" class="px-6 py-4 text-center">No reservations found.</td></tr>';
+}
+?>
+
                 </tbody>
             </table>
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-gray-400 py-6">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 Chef Moha. All rights reserved.</p>
-        </div>
-    </footer>
+   
 </body>
 </html>
